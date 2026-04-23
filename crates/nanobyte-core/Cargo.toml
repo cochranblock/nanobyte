@@ -1,0 +1,22 @@
+# Unlicense — NANOBYTE
+# Shared types. no_std-compatible so the mote firmware can depend on this
+# without pulling std. Host crates opt into the `std` feature for ergonomic
+# additions (Display impls, chrono, etc.) without bloating the mote build.
+
+[package]
+name = "nanobyte-core"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+authors.workspace = true
+description = "Shared telemetry + command types for the Shotgun Nanobyte Sensor Swarm."
+
+[features]
+default = ["std"]
+std = []
+
+[dependencies]
+# Intentionally minimal. Serde + bincode land in nanobyte-proto, not here,
+# so this crate stays dependency-free and compiles for rv32imc without fuss.

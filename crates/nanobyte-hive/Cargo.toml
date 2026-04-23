@@ -1,0 +1,26 @@
+# Unlicense — NANOBYTE mothership flight software
+# Runs on Linux-embedded, Dragon-2-derived flight computer. Tokio-based.
+# Block 0.0: boot log + shape of the f1–f10 handler modules.
+
+[package]
+name = "nanobyte-hive"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+authors.workspace = true
+description = "Mothership flight software for the NANOBYTE mission."
+
+[[bin]]
+name = "nanobyte-hive"
+path = "src/main.rs"
+
+[dependencies]
+nanobyte-core = { path = "../nanobyte-core" }
+nanobyte-proto = { path = "../nanobyte-proto" }
+anyhow = { workspace = true }
+tokio = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+clap = { workspace = true }

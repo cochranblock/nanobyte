@@ -1,0 +1,40 @@
+# Unlicense — NANOBYTE ground control plane
+# Mission dashboard, uplink composer, swarm map renderer. Axum on localhost.
+
+[package]
+name = "nanobyte-ground"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+authors.workspace = true
+description = "NANOBYTE ground control — mission dashboard + uplink composer."
+
+[[bin]]
+name = "nanobyte-ground"
+path = "src/main.rs"
+
+[[bin]]
+name = "nanobyte-ground-serial"
+path = "src/bin/serial.rs"
+required-features = ["serial"]
+
+[features]
+default = []
+# Serial listener for the ESP32-WROOM desk-mote Block 0.0 demo.
+# Opens a USB-serial port, decodes hex-encoded nanobyte-proto frames,
+# exposes them at http://localhost:4000/ alongside a live table.
+serial = ["dep:serialport", "dep:hex"]
+
+[dependencies]
+nanobyte-core = { path = "../nanobyte-core" }
+nanobyte-proto = { path = "../nanobyte-proto" }
+anyhow = { workspace = true }
+tokio = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+clap = { workspace = true }
+axum = { workspace = true }
+serialport = { version = "4", optional = true }
+hex = { version = "0.4", optional = true }

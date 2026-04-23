@@ -1,0 +1,28 @@
+# Unlicense — NANOBYTE swarm digital twin
+# Runs a 1 M mote population in pure Rust, no actual hardware. Used for
+# pre-flight validation of the hive's event loop, dust-pool allocator,
+# and return-decode pipeline.
+
+[package]
+name = "nanobyte-sim"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+authors.workspace = true
+description = "1 M-mote swarm simulator for the NANOBYTE mission."
+
+[[bin]]
+name = "nanobyte-sim"
+path = "src/main.rs"
+
+[dependencies]
+nanobyte-core = { path = "../nanobyte-core" }
+nanobyte-proto = { path = "../nanobyte-proto" }
+nanobyte-mote = { path = "../nanobyte-mote" }
+anyhow = { workspace = true }
+tokio = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+clap = { workspace = true }

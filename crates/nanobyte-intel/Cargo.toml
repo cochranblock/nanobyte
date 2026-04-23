@@ -1,0 +1,33 @@
+# Unlicense — NANOBYTE intel
+#
+# Embedded Rust binary. Reads approuter-acme / approuter / cochranblock
+# access logs, stores probe + visit events in sled, emits intel findings.
+# No sqlite, no external DBs. sled + bincode + zstd, per Kova conventions.
+
+[package]
+name = "nanobyte-intel"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+authors.workspace = true
+description = "Web-traffic intel for cochranblock.org — sled + bincode + zstd, zero cloud."
+
+[[bin]]
+name = "nanobyte-intel"
+path = "src/main.rs"
+
+[dependencies]
+anyhow = { workspace = true }
+clap = { workspace = true }
+serde = { workspace = true }
+serde_json = "1"
+bincode = { workspace = true }
+sled = { workspace = true }
+zstd = { workspace = true }
+tokio = { workspace = true }
+hickory-resolver = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls"] }

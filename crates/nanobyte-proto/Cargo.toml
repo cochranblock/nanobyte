@@ -1,0 +1,17 @@
+# Unlicense — NANOBYTE
+# Wire format: 2-byte magic + 1-byte version + 2-byte seq + payload + CRC-16.
+# Packed binary. No serde_json. No strings. Every byte accounted for.
+
+[package]
+name = "nanobyte-proto"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+authors.workspace = true
+description = "Wire protocol for NANOBYTE: mothership ↔ mote and mothership ↔ ground."
+
+[dependencies]
+nanobyte-core = { path = "../nanobyte-core", default-features = false }
+crc = { workspace = true }

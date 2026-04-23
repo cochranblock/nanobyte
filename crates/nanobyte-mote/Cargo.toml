@@ -1,0 +1,22 @@
+# Unlicense — NANOBYTE mote firmware
+# Block 0.0: pure no_std skeleton. Compiles for host and rv32imc.
+# Real flash-image build happens when Ferrocene + a cortex-m-rt-equivalent
+# for RISC-V embedded targets are pinned. For now this crate proves the
+# shape of the state machine and pins the BNN inference API.
+
+[package]
+name = "nanobyte-mote"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+authors.workspace = true
+description = "Nanobyte mote firmware — 1-bit BNN inference on rv32imc, no_std."
+
+[lib]
+# rlib only — no proc-macro, no cdylib. The firmware binary comes later
+# as a separate bin target once the target + runtime are pinned.
+
+[dependencies]
+nanobyte-core = { path = "../nanobyte-core", default-features = false }

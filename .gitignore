@@ -1,0 +1,17 @@
+/target
+**/*.rs.bk
+Cargo.lock.bak
+.DS_Store
+*.swp
+*.swo
+*~
+
+# firmware build products
+*.bin
+*.hex
+*.elf
+
+# local ops
+/ops/local/
+/ops/secrets/
+*.env

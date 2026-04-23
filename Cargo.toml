@@ -1,0 +1,94 @@
+# Unlicense — NANOBYTE / cochranblock.org
+# Contributors: KOVA, Claude Opus 4.6
+#
+# Workspace root for the Shotgun Nanobyte Sensor Swarm mission.
+# Design doc: ~/.claude/plans/shotgun-nanobyte-sensor-swarm.plan.md
+
+[workspace]
+resolver = "2"
+members = [
+    "crates/nanobyte-core",
+    "crates/nanobyte-proto",
+    "crates/nanobyte-mote",
+    "crates/nanobyte-hive",
+    "crates/nanobyte-sim",
+    "crates/nanobyte-ground",
+    "crates/nanobyte-test",
+    "crates/nanobyte-intel",
+]
+
+# The mote crate cross-compiles to rv32imc; a naive `cargo check` from the
+# workspace root would try to build it for the host and fail on no_std
+# imports. Exclude it from default-members so `cargo check` at the root only
+# exercises the host-buildable crates. Explicit mote builds still work via
+# `cargo check -p nanobyte-mote --target riscv32imc-unknown-none-elf`.
+default-members = [
+    "crates/nanobyte-core",
+    "crates/nanobyte-proto",
+    "crates/nanobyte-hive",
+    "crates/nanobyte-sim",
+    "crates/nanobyte-ground",
+    "crates/nanobyte-test",
+    "crates/nanobyte-intel",
+]
+
+[workspace.package]
+version = "0.0.1"
+edition = "2024"
+license = "Unlicense"
+repository = "https://github.com/cochranblock/nanobyte"
+homepage = "https://cochranblock.org"
+authors = ["KOVA", "Claude Opus 4.6"]
+
+[workspace.dependencies]
+# Shared host deps — pinned once, inherited by member crates so versions stay locked.
+anyhow = "1"
+thiserror = "2"
+serde = { version = "1", features = ["derive"] }
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "sync", "time", "signal"] }
+tracing = "0.1"
+tracing-subscriber = "0.3"
+clap = { version = "4", features = ["derive"] }
+axum = "0.7"
+bincode = { version = "2", features = ["serde"] }
+crc = "3"
+sled = "0.34"
+zstd = "0.13"
+hickory-resolver = "0.24"
+
+# ── P27 Diamond Rust Binary Architecture ─────────────────────────────────
+# Speed-Diamond: for the ground and mothership binaries where runtime wins.
+[profile.diamond]
+inherits = "release"
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+strip = true
+panic = "abort"
+overflow-checks = false
+debug = false
+incremental = false
+
+# Size-Diamond: for the mote firmware where bytes win over cycles.
+[profile.diamond-edge]
+inherits = "release"
+opt-level = "s"
+lto = "fat"
+codegen-units = 1
+strip = true
+panic = "abort"
+overflow-checks = false
+debug = false
+incremental = false
+
+# Default release inherits speed-Diamond semantics so `cargo build --release`
+# on the ground-side binaries Just Works without specifying --profile.
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+strip = true
+panic = "abort"
+overflow-checks = false
+debug = false
+incremental = false
