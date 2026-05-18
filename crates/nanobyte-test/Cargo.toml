@@ -24,4 +24,4 @@ nanobyte-mote = { path = "../nanobyte-mote" }
 anyhow = { workspace = true }
 tokio = { workspace = true }
 serde_json = "1"
-exopack = { version = "0.2", features = ["interface", "triple_sims"] }
+exopack = { version = "0.3", features = ["interface", "triple_sims", "screenshot", "devtools"] }

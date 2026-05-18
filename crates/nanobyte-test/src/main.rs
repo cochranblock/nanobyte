@@ -113,7 +113,7 @@ async fn stage_ground_smoke() -> Result<()> {
         .map_err(|e| anyhow!("spawn nanobyte-ground: {}", e))?;
 
     // Poll until ready — max 3 s.
-    let client = exopack::interface::f81()
+    let client = exopack::interface::http_client()
         .map_err(|e| anyhow!("http_client: {}", e))?;
     let mut ready = false;
     for _ in 0..30 {
@@ -169,8 +169,18 @@ async fn stage_ground_smoke() -> Result<()> {
         return Err(anyhow!("/ response missing NANOBYTE branding"));
     }
 
-    // TODO: POA screenshots via exopack::screenshot::f79 — wire after exopack 0.3 ships
-    // (0.2.1 published f79 concatenates base+name instead of base+path, causing nav timeouts).
+    // POA screenshots — index page + /hashes JSON rendered in browser.
+    let theme = exopack::screenshot::f78();
+    let captured = exopack::screenshot::f79(
+        &base,
+        "nanobyte",
+        &[("ground-index", "/"), ("ground-hashes", "/hashes")],
+        &theme,
+    )
+    .await;
+    if !captured {
+        eprintln!("[WARN] screenshot capture failed (non-fatal for smoke)");
+    }
 
     let _ = child.kill();
     Ok(())
@@ -203,7 +213,7 @@ async fn run_once() -> bool {
 #[tokio::main]
 async fn main() {
     println!("nanobyte-test — Block 0.1");
-    let ok = exopack::triple_sims::f60(run_once).await;
+    let ok = exopack::triple_sims::run(run_once).await;
     if ok {
         println!("[ALL PASS] nanobyte-test Block 0.1 (TRIPLE SIMS)");
     }
