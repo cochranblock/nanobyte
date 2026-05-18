@@ -15,3 +15,4 @@ description = "Wire protocol for NANOBYTE: mothership â†” mote and mothership â†
 [dependencies]
 nanobyte-core = { path = "../nanobyte-core", default-features = false }
 crc = { workspace = true }
+thiserror = { workspace = true }

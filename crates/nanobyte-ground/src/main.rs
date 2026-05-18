@@ -5,9 +5,10 @@
 //! Block 0.1 adds the swarm-map renderer + uplink composer.
 
 use anyhow::Result;
-use axum::{routing::get, Router};
+use axum::{routing::get, Json, Router};
 use clap::Parser;
 use nanobyte_core::{FRAME_MAGIC, PROTOCOL_VERSION};
+use serde::Serialize;
 use tracing::info;
 
 #[derive(Parser, Debug)]
@@ -16,6 +17,28 @@ struct Args {
     /// Bind address for the local dashboard.
     #[arg(long, default_value = "127.0.0.1:4000")]
     bind: String,
+}
+
+#[derive(Serialize)]
+struct HashInfo {
+    binary_blake3: String,
+    frame_magic: String,
+    protocol_version: String,
+    ground_version: &'static str,
+}
+
+async fn hashes() -> Json<HashInfo> {
+    let binary_blake3 = std::env::current_exe()
+        .ok()
+        .and_then(|p| std::fs::read(p).ok())
+        .map(|b| blake3::hash(&b).to_hex().to_string())
+        .unwrap_or_else(|| "unavailable".to_string());
+    Json(HashInfo {
+        binary_blake3,
+        frame_magic: format!("0x{:02X}{:02X}", FRAME_MAGIC[0], FRAME_MAGIC[1]),
+        protocol_version: format!("0x{:02X}", PROTOCOL_VERSION),
+        ground_version: env!("CARGO_PKG_VERSION"),
+    })
 }
 
 async fn index() -> axum::response::Html<String> {
@@ -35,7 +58,7 @@ async fn main() -> Result<()> {
         .with_env_filter(tracing_subscriber::EnvFilter::from_default_env())
         .init();
     let args = Args::parse();
-    let app = Router::new().route("/", get(index));
+    let app = Router::new().route("/", get(index)).route("/hashes", get(hashes));
     info!(
         "nanobyte-ground v{} — Block 0.0 listening on http://{}",
         env!("CARGO_PKG_VERSION"),
